@@ -1,5 +1,6 @@
 // src/components/Navbar.jsx
 import React, { useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 
 const NAV_ITEMS = [
   'Home',
@@ -14,30 +15,31 @@ const NAV_ITEMS = [
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const currentPath = typeof window !== 'undefined' ? window.location.pathname : '';
+  const location = useLocation();
+  const currentPath = location.pathname;
 
   return (
     <nav className="sticky top-0 z-30 bg-white/90 backdrop-blur-md shadow-lg">
       <div className="container mx-auto px-6 py-3 flex items-center justify-between">
         {/* Logo */}
-        <a href="/" className="flex items-center">
+        <Link to="/" className="flex items-center">
           <img
             src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTA4sQVakMFNnRIsNLKXd2Jk3Bje2r2oBDS5w&s"
             alt="Logo"
             className="h-10 w-auto mr-4"
           />
           <span className="text-2xl font-bold text-gray-800">MyBrand</span>
-        </a>
+        </Link>
 
         {/* Desktop Nav Links */}
         <ul className="hidden gap-5 md:flex items-center space-x-4">
           {NAV_ITEMS.map((item) => {
-            const href = `/${item.toLowerCase()}`;
+            const href = item === 'Home' ? '/' : `/${item.toLowerCase()}`;
             const isActive = currentPath === href;
             return (
               <li key={item}>
-                <a
-                  href={href}
+                <Link
+                  to={href}
                   className={`
                     relative px-4 py-2 rounded-lg text-sm font-medium uppercase tracking-wide transition
                     ${isActive
@@ -46,7 +48,7 @@ const Navbar = () => {
                   `}
                 >
                   {item}
-                </a>
+                </Link>
               </li>
             );
           })}
@@ -96,18 +98,25 @@ const Navbar = () => {
         `}
       >
         <ul className="flex flex-col items-center py-4 space-y-3">
-          {NAV_ITEMS.map((item) => (
-            <li key={item} className="w-full text-center">
-              <a
-                href={`/${item.toLowerCase()}`}
-                className="block w-full px-4 py-2 text-gray-700 font-medium uppercase tracking-wide text-base
-                           hover:bg-orange-100 hover:text-orange-600 transition rounded-lg"
-                onClick={() => setIsOpen(false)}
-              >
-                {item}
-              </a>
-            </li>
-          ))}
+          {NAV_ITEMS.map((item) => {
+            const href = item === 'Home' ? '/' : `/${item.toLowerCase()}`;
+            const isActive = currentPath === href;
+            return (
+              <li key={item} className="w-full text-center">
+                <Link
+                  to={href}
+                  className={`
+                    block w-full px-4 py-2 text-gray-700 font-medium uppercase tracking-wide text-base
+                    hover:bg-orange-100 hover:text-orange-600 transition rounded-lg
+                    ${isActive ? 'text-orange-600' : ''}
+                  `}
+                  onClick={() => setIsOpen(false)}
+                >
+                  {item}
+                </Link>
+              </li>
+            );
+          })}
 
           <li className="w-full text-center">
             <select
